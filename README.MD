@@ -40,8 +40,11 @@ CMD ["python"]
 该Dockerfile执行的语句意思是
 
 从官方拖取python:3.5镜像
+
 把requirements.txt拷贝到docker /usr/www/app 目录下
+
 却换工作目录到 /usr/www/app
+
 安装通过requirements.txt执行安装依赖文件
 
 二.生成镜像文件
@@ -60,11 +63,61 @@ docker build -t flask-sample:latest .
 docker run -v $PWD/app:/usr/www/app -w /usr/www/app -p 5000:5000 flask-sample-one python app.py
 ```
 命令说明：
+
 -v $PWD:/usr/src/myapp :将主机中当前目录挂载到容器的/usr/src/app
+
 -w /usr/src/app :指定容器的/usr/src/app目录为工作目录
+
 python app.py :使用容器的python命令来执行工作目录中的app.py文件
 
+其他:删除没用的镜像文件
+
+docker 删除<none>镜像
+
+The reason for the error is that eventhough the image did not have any tag, there still exists a container created on that image which might be in the exited state. So you need to ensure that you have stopped and deleted all containers created on those images. The following command helps you in removing all containers that are not running:
+
+docker rm `docker ps -aq --no-trunc --filter "status=exited"`
+
+Now this removes all the dangling non intermediate <none> images:
+
+docker rmi `docker images --filter 'dangling=true' -q --no-trunc`
 
 
+git 使用
+
+1.初始化
+
+```
+git init
+```
+
+生成.gitignore 文件
+
+```
+touch .gitignore
+```
+
+添加到本地仓库
+
+```
+git add .
+```
+
+添加远程仓库地址:
+
+```
+git remote add dockerflask https://github.com/fredliu168/docker-for-flask.git
+
+```
+
+推送到远程仓库:
+```
+git push -u dockerflask master
+```
+
+删除远程仓库地址:
+```
+git remote rm dockerflask
+```
 
 
